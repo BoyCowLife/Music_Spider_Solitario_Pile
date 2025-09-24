@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#2a2a3e">
+    <meta name="theme-color" content="#0a0a0f">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <title>Scale Master - Quiz Musicale</title>
@@ -21,7 +21,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1e 100%);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -30,48 +30,111 @@
             width: 100%;
         }
 
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
         .header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(5, 5, 10, 0.95);
+            backdrop-filter: blur(10px);
             padding: 15px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+            border-bottom: 2px solid rgba(232, 65, 24, 0.5);
         }
 
         .header h1 {
             font-size: 24px;
-            color: #333;
+            color: #fff;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .difficulty-selector {
             display: flex;
-            gap: 10px;
-            justify-content: center;
+            gap: 8px;
         }
 
-        .difficulty-btn {
-            padding: 8px 20px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
+        .difficulty-btn, .restart-btn {
+            padding: 8px 16px;
+            border: 2px solid #e84118;
+            background: rgba(10, 10, 15, 0.8);
+            color: #fff;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
+            backdrop-filter: blur(5px);
         }
 
-        .difficulty-btn.active {
-            background: #667eea;
-            color: white;
+        .difficulty-btn.active, .restart-btn:active {
+            background: #e84118;
+            transform: scale(0.95);
+            box-shadow: 0 0 20px rgba(232, 65, 24, 0.5);
+        }
+
+        .restart-btn {
+            background: rgba(10, 10, 15, 0.8);
+            border-color: #4caf50;
+        }
+
+        .restart-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
         }
 
         .score-info {
             display: flex;
             justify-content: space-around;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
             color: white;
             font-weight: 600;
+            gap: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .score-item.correct {
+            color: #4caf50;
+        }
+
+        .score-item.wrong {
+            color: #ff5252;
+        }
+
+        .score-item.moves {
+            color: #ffd700;
         }
 
         .scales-area {
@@ -85,29 +148,32 @@
         }
 
         .scale-column {
-            background: rgba(255,255,255,0.95);
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(232, 65, 24, 0.3);
             border-radius: 15px;
             padding: 15px 10px;
             flex: 1;
             max-width: 120px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
         .scale-title {
             text-align: center;
             font-weight: bold;
-            color: #333;
+            color: #fff;
             margin-bottom: 15px;
-            font-size: 18px;
+            font-size: 16px;
             padding: 8px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: linear-gradient(135deg, #e84118, #c23616);
             border-radius: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 10px rgba(232, 65, 24, 0.3);
         }
 
         .degree-slot {
-            background: #f0f0f5;
-            border: 2px dashed #ccc;
+            background: rgba(5, 5, 10, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             margin: 8px 0;
             padding: 12px;
@@ -119,55 +185,103 @@
             transition: all 0.3s;
         }
 
-        .degree-slot.valid-drop {
-            background: #e8f5e9;
-            border-color: #4caf50;
-            transform: scale(1.05);
+        .degree-slot.hover-neutral {
+            background: rgba(30, 30, 40, 0.7);
+            transform: scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        .degree-slot.invalid-drop {
-            background: #ffebee;
-            border-color: #f44336;
+        .degree-slot.drop-success {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4caf50;
+            animation: successPulse 0.5s;
+        }
+
+        .degree-slot.drop-error {
+            background: rgba(255, 82, 82, 0.3);
+            border-color: #ff5252;
+            animation: errorShake 0.5s;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .degree-label {
             position: absolute;
             top: 2px;
             left: 8px;
-            font-size: 11px;
-            color: #666;
+            font-size: 10px;
+            color: #ffd700;
             font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .note-in-slot {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #4caf50, #45a049);
             color: white;
             padding: 8px 15px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 16px;
+            box-shadow: 0 2px 10px rgba(76, 175, 80, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .deck-area {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 120px;
+            min-height: 140px;
+            border-top: 2px solid rgba(232, 65, 24, 0.3);
         }
 
         .card-deck {
-            width: 80px;
-            height: 100px;
-            background: linear-gradient(135deg, #434343, #000000);
-            border-radius: 10px;
+            width: 90px;
+            height: 120px;
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0f);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.7),
+                inset 0 2px 5px rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-deck::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .card-deck:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.6),
+                0 0 20px rgba(255, 215, 0, 0.3);
         }
 
         .card-deck:active {
@@ -175,26 +289,40 @@
         }
 
         .card-back {
-            color: white;
-            font-size: 40px;
+            color: #ffd700;
+            font-size: 48px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .current-note {
-            background: white;
-            border-radius: 15px;
-            padding: 20px 30px;
-            font-size: 28px;
+            background: linear-gradient(135deg, #2c2c3e, #1a1a2e);
+            color: #ffd700;
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            padding: 25px 35px;
+            font-size: 32px;
             font-weight: bold;
-            color: #333;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.6),
+                0 0 20px rgba(255, 215, 0, 0.3);
             cursor: move;
             touch-action: none;
             transition: transform 0.2s;
+            position: relative;
+        }
+
+        .current-note::before {
+            content: '♪';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            color: rgba(255, 215, 0, 0.3);
         }
 
         .current-note.dragging {
             transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
             z-index: 1000;
         }
 
@@ -203,13 +331,15 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: linear-gradient(135deg, #0a0a0f, #1a1a2e);
+            border: 2px solid #ffd700;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
             text-align: center;
             display: none;
             z-index: 2000;
+            color: white;
         }
 
         .win-message.show {
@@ -217,25 +347,66 @@
             animation: popIn 0.5s ease;
         }
 
+        .win-message h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .win-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: rgba(10, 10, 15, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
         @keyframes popIn {
             from {
                 transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
             }
             to {
                 transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
             }
         }
 
         .play-again-btn {
             margin-top: 20px;
             padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #e84118, #c23616);
             color: white;
             border: none;
             border-radius: 25px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(232, 65, 24, 0.4);
+            transition: all 0.3s;
+        }
+
+        .play-again-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(232, 65, 24, 0.6);
         }
 
         @media (max-width: 400px) {
@@ -249,18 +420,25 @@
     </style>
 </head>
 <body>
+    <div class="stars"></div>
+    
     <div class="header">
         <h1>🎵 Scale Master</h1>
-        <div class="difficulty-selector">
-            <button class="difficulty-btn active" data-level="facile">Facile</button>
-            <button class="difficulty-btn" data-level="medio">Medio</button>
-            <button class="difficulty-btn" data-level="difficile">Difficile</button>
+        <div class="controls-row">
+            <div class="difficulty-selector">
+                <button class="difficulty-btn active" data-level="facile">Facile</button>
+                <button class="difficulty-btn" data-level="medio">Medio</button>
+                <button class="difficulty-btn" data-level="difficile">Difficile</button>
+            </div>
+            <button class="restart-btn" onclick="initGame()">🔄 Ricomincia</button>
         </div>
     </div>
 
     <div class="score-info">
-        <div>Mosse: <span id="moves">0</span></div>
-        <div>Completate: <span id="completed">0</span>/<span id="total">21</span></div>
+        <div class="score-item correct">✓ <span id="correct">0</span></div>
+        <div class="score-item wrong">✗ <span id="wrong">0</span></div>
+        <div class="score-item moves">↻ <span id="moves">0</span></div>
+        <div class="score-item">🎯 <span id="completed">0</span>/<span id="total">21</span></div>
     </div>
 
     <div class="scales-area" id="scalesArea"></div>
@@ -274,11 +452,38 @@
     <div class="win-message" id="winMessage">
         <h2>🎉 Complimenti!</h2>
         <p>Hai completato tutte le scale!</p>
-        <p>Mosse totali: <span id="finalMoves">0</span></p>
+        <div class="win-stats">
+            <div class="stat-box">
+                <div class="stat-label">Corrette</div>
+                <div class="stat-value" id="finalCorrect">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Errori</div>
+                <div class="stat-value" id="finalWrong" style="color: #ff5252">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Mosse</div>
+                <div class="stat-value" id="finalMoves" style="color: #ffd700">0</div>
+            </div>
+        </div>
         <button class="play-again-btn" onclick="initGame()">Gioca Ancora</button>
     </div>
 
     <script>
+        // Crea stelle animate nello sfondo
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            starsContainer.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
         // Definizione delle scale maggiori
         const scalePatterns = {
             'C': ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
@@ -304,7 +509,9 @@
             remainingNotes: [],
             currentNote: null,
             moves: 0,
-            completed: 0
+            completed: 0,
+            correct: 0,
+            wrong: 0
         };
 
         function getNumberOfScales() {
@@ -356,15 +563,20 @@
             
             gameState.moves = 0;
             gameState.completed = 0;
+            gameState.correct = 0;
+            gameState.wrong = 0;
             gameState.currentNote = null;
             
             document.getElementById('moves').textContent = '0';
             document.getElementById('completed').textContent = '0';
+            document.getElementById('correct').textContent = '0';
+            document.getElementById('wrong').textContent = '0';
             document.getElementById('total').textContent = gameState.scales.length * 7;
             document.getElementById('winMessage').classList.remove('show');
             
             renderScales();
             resetDeck();
+            createStars();
         }
 
         function renderScales() {
@@ -446,6 +658,7 @@
         // Drag and Drop handlers
         let draggedElement = null;
         let touchOffset = { x: 0, y: 0 };
+        let currentHoveredSlot = null;
 
         function handleDragStart(e) {
             draggedElement = e.target;
@@ -456,7 +669,7 @@
         function handleDragEnd(e) {
             e.target.classList.remove('dragging');
             document.querySelectorAll('.degree-slot').forEach(slot => {
-                slot.classList.remove('valid-drop', 'invalid-drop');
+                slot.classList.remove('hover-neutral');
             });
         }
 
@@ -465,31 +678,23 @@
             if (!gameState.currentNote) return;
             
             const slot = e.currentTarget;
-            const scaleIndex = parseInt(slot.dataset.scale);
-            const degreeIndex = parseInt(slot.dataset.degree);
-            
-            if (isValidPlacement(scaleIndex, degreeIndex)) {
-                slot.classList.add('valid-drop');
-                slot.classList.remove('invalid-drop');
-            } else {
-                slot.classList.add('invalid-drop');
-                slot.classList.remove('valid-drop');
-            }
+            // Non mostra se è valido o no, solo che è sopra uno slot
+            slot.classList.add('hover-neutral');
         }
 
         function handleDragLeave(e) {
-            e.currentTarget.classList.remove('valid-drop', 'invalid-drop');
+            e.currentTarget.classList.remove('hover-neutral');
         }
 
         function handleDrop(e) {
             e.preventDefault();
             const slot = e.currentTarget;
+            slot.classList.remove('hover-neutral');
+            
             const scaleIndex = parseInt(slot.dataset.scale);
             const degreeIndex = parseInt(slot.dataset.degree);
             
-            if (placeNote(scaleIndex, degreeIndex)) {
-                slot.classList.remove('valid-drop', 'invalid-drop');
-            }
+            placeNote(scaleIndex, degreeIndex);
         }
 
         // Touch handlers per iOS
@@ -514,21 +719,18 @@
             draggedElement.style.left = (touch.clientX - touchOffset.x) + 'px';
             draggedElement.style.top = (touch.clientY - touchOffset.y) + 'px';
             
-            // Evidenzia slot validi
+            // Trova lo slot sotto il dito
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            // Rimuovi hover da slot precedente
+            if (currentHoveredSlot && currentHoveredSlot !== elementBelow) {
+                currentHoveredSlot.classList.remove('hover-neutral');
+            }
+            
+            // Aggiungi hover neutro (non rivela se è giusto o sbagliato)
             if (elementBelow && elementBelow.classList.contains('degree-slot')) {
-                const scaleIndex = parseInt(elementBelow.dataset.scale);
-                const degreeIndex = parseInt(elementBelow.dataset.degree);
-                
-                document.querySelectorAll('.degree-slot').forEach(slot => {
-                    slot.classList.remove('valid-drop', 'invalid-drop');
-                });
-                
-                if (isValidPlacement(scaleIndex, degreeIndex)) {
-                    elementBelow.classList.add('valid-drop');
-                } else {
-                    elementBelow.classList.add('invalid-drop');
-                }
+                elementBelow.classList.add('hover-neutral');
+                currentHoveredSlot = elementBelow;
             }
         }
 
@@ -538,6 +740,11 @@
             const touch = e.changedTouches[0];
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
             
+            // Rimuovi tutti gli hover
+            document.querySelectorAll('.degree-slot').forEach(slot => {
+                slot.classList.remove('hover-neutral');
+            });
+            
             if (elementBelow && elementBelow.classList.contains('degree-slot')) {
                 const scaleIndex = parseInt(elementBelow.dataset.scale);
                 const degreeIndex = parseInt(elementBelow.dataset.degree);
@@ -545,16 +752,14 @@
                 placeNote(scaleIndex, degreeIndex);
             }
             
-            document.querySelectorAll('.degree-slot').forEach(slot => {
-                slot.classList.remove('valid-drop', 'invalid-drop');
-            });
-            
             if (draggedElement) {
                 draggedElement.classList.remove('dragging');
                 draggedElement.style.position = '';
                 draggedElement.style.zIndex = '';
                 draggedElement = null;
             }
+            
+            currentHoveredSlot = null;
         }
 
         function isValidPlacement(scaleIndex, degreeIndex) {
@@ -568,31 +773,59 @@
         }
 
         function placeNote(scaleIndex, degreeIndex) {
-            if (!isValidPlacement(scaleIndex, degreeIndex)) {
+            const scale = gameState.scales[scaleIndex];
+            
+            // Se lo slot è già occupato, non fare nulla
+            if (scale.filled[degreeIndex]) {
                 return false;
             }
             
-            const scale = gameState.scales[scaleIndex];
-            scale.filled[degreeIndex] = gameState.currentNote.note;
-            gameState.currentNote = null;
             gameState.moves++;
-            gameState.completed++;
-            
             document.getElementById('moves').textContent = gameState.moves;
-            document.getElementById('completed').textContent = gameState.completed;
             
-            renderScales();
-            resetDeck();
+            const slot = document.querySelector(`[data-scale="${scaleIndex}"][data-degree="${degreeIndex}"]`);
             
-            // Controlla vittoria
-            if (gameState.completed === gameState.scales.length * 7) {
-                showWinMessage();
+            if (isValidPlacement(scaleIndex, degreeIndex)) {
+                // Posizionamento corretto
+                scale.filled[degreeIndex] = gameState.currentNote.note;
+                gameState.completed++;
+                gameState.correct++;
+                
+                slot.classList.add('drop-success');
+                setTimeout(() => slot.classList.remove('drop-success'), 500);
+                
+                document.getElementById('completed').textContent = gameState.completed;
+                document.getElementById('correct').textContent = gameState.correct;
+                
+                gameState.currentNote = null;
+                
+                setTimeout(() => {
+                    renderScales();
+                    resetDeck();
+                    
+                    // Controlla vittoria
+                    if (gameState.completed === gameState.scales.length * 7) {
+                        showWinMessage();
+                    }
+                }, 500);
+                
+                return true;
+            } else {
+                // Posizionamento errato
+                gameState.wrong++;
+                document.getElementById('wrong').textContent = gameState.wrong;
+                
+                slot.classList.add('drop-error');
+                setTimeout(() => slot.classList.remove('drop-error'), 500);
+                
+                // La carta resta disponibile per essere riposizionata
+                return false;
             }
-            
-            return true;
         }
 
         function showWinMessage() {
+            document.getElementById('finalCorrect').textContent = gameState.correct;
+            document.getElementById('finalWrong').textContent = gameState.wrong;
             document.getElementById('finalMoves').textContent = gameState.moves;
             document.getElementById('winMessage').classList.add('show');
         }
